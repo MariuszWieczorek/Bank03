@@ -111,7 +111,7 @@ namespace Bank
         {
             // Ta dziwna wartość :D10 w funkcji do formatowania tekstu oznacza
             // wstaw tutaj liczbę, która jest argumentem, ale całość uzupełnij zerami tak żeby w sumie było 10 znaków
-            var accountNumber = string.Format("94{0:D10}", id);
+            var accountNumber = string.Format("94{0:D5}", id);
             
             return accountNumber;
         }

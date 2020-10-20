@@ -16,14 +16,7 @@ namespace Bank
             Console.WriteLine(author);
             Console.WriteLine();
 
-            AccountManager manager = new AccountManager();
-            manager.CreateSavingsAccount("Jan", "Kowalski", 72080408887);
-            manager.CreateSavingsAccount("Jan", "Szwagierczak", 72080408897);
-            manager.CreateSavingsAccount("Małgorzata", "Nowakowska", 72080409999);
-            manager.CreateSavingsAccount("Marek", "Nowak", 72080409998);
-            manager.CreateBillingAccount("Małgorzata", "Nowakowska", 72080409999);
-            manager.CreateBillingAccount("Joanna", "Karbowniczak", 72080409991);
-
+     
             BankManager BankX = new BankManager();
             BankX.Run();
 

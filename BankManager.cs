@@ -15,6 +15,13 @@ namespace Bank
         public BankManager()
         {
             _accountsManager = new AccountManager();
+            _accountsManager.CreateSavingsAccount("Jan", "Kowalski", 72080408887);
+            _accountsManager.CreateSavingsAccount("Jan", "Szwagierczak", 72080408897);
+            _accountsManager.CreateSavingsAccount("Małgorzata", "Nowakowska", 72080409999);
+            _accountsManager.CreateSavingsAccount("Marek", "Nowak", 72080409998);
+            _accountsManager.CreateBillingAccount("Małgorzata", "Nowakowska", 72080409999);
+            _accountsManager.CreateBillingAccount("Joanna", "Karbowniczak", 72080409991);
+
             _printer = new Printer();
         }
 
@@ -50,45 +57,31 @@ namespace Bank
                 switch (action)
                 {
                     case 1:
-                        Console.Clear();
-                        Console.WriteLine("Wybrano listę kont klienta");
                         ListOfAccounts();
-                        Console.ReadKey();
                         break;
                     case 2:
-                        Console.Clear();
-                        Console.WriteLine("Wybrano otwarcie konta rozliczeniowego");
-                        Console.ReadKey();
+                        AddBillingAccount();
                         break;
                     case 3:
-                        Console.Clear();
-                        Console.WriteLine("Wybrano otwarcie konta oszczędnościowego");
-                        Console.ReadKey();
+                        AddSavingsAccount();
                         break;
                     case 4:
-                        Console.Clear();
-                        Console.WriteLine("Wybrano wpłatę pieniędzy na konto");
-                        Console.ReadKey();
+                        AddMoney();
                         break;
                     case 5:
-                        Console.Clear();
-                        Console.WriteLine("Wybrano wypłatę pieniędzy z konta");
-                        Console.ReadKey();
+                        TakeMoney();
                         break;
                     case 6:
-                        Console.Clear();
-                        Console.WriteLine("Wybrano listę klientów");
-                        Console.ReadKey();
+                        ListOfCustomers();
                         break;
                     case 7:
-                        Console.Clear();
-                        Console.WriteLine("Wybrano listę wszystkich kont");
-                        Console.ReadKey();
+                        GetAllAccounts();
                         break;
                     case 8:
+                        CloseMonth();
+                        break;
+                    case 0:
                         Console.Clear();
-                        Console.WriteLine("Wybrano zamknięcie miesiąca");
-                        Console.ReadKey();
                         break;
                     default:
                         Console.Clear();
@@ -126,6 +119,22 @@ namespace Bank
         }
 
 
+        private void GetAllAccounts()
+        {
+            Console.Clear();
+            foreach (Account account in _accountsManager.GetAllAccounts())
+            {
+                _printer.Print(account);
+            }
+            Console.ReadKey();
+
+        }
+
+
+        // lista kont wybranego kontrahenta
+        // na wejściu dostajemy obiekt typu CustomerData
+        // później metodą _accountsManager.GetAllAccountsFor pobieramy dane konta
+        // i wyświetlają pobrane konta w pętli metodą _printer.Print
         private void ListOfAccounts()
         {
             Console.Clear();
@@ -140,6 +149,8 @@ namespace Bank
             Console.ReadKey();
         }
 
+        // wymusza pobranie danych kontrahenta z konsoli
+        // zwrca obiekt Customer
         private CustomerData ReadCustomerData()
         {
             string firstName;
@@ -156,6 +167,96 @@ namespace Bank
             return new CustomerData(firstName, lastName, pesel);
         }
 
+        // Lista kontrahentów
+        // _accountsManager.ListOfCustomers() daje nam sformatowaną liste stringów z danymi kontrahenta
+        private void ListOfCustomers()
+        {
+            Console.Clear();
+            Console.WriteLine("Lista klientów:");
+            foreach(string customer in _accountsManager.ListOfCustomers())
+            {
+                Console.WriteLine(customer);
+            }
+            Console.ReadKey();
+        }
+
+        // dodanie konta bilingowego
+        private void AddBillingAccount()
+        {
+            Console.Clear();
+            CustomerData data = ReadCustomerData();
+            Account billingAccount = _accountsManager.CreateBillingAccount(data.FirstName, data.LastName, data.Pesel);
+
+            Console.WriteLine("Utworzono konto rozliczeniowe:");
+            _printer.Print(billingAccount);
+            Console.ReadKey();
+        }
+
+
+        // dodanie konta oszczędnościowego
+        private void AddSavingsAccount()
+        {
+            Console.Clear();
+            CustomerData data = ReadCustomerData();
+            Account savingsAccount = _accountsManager.CreateSavingsAccount(data.FirstName, data.LastName, data.Pesel);
+
+            Console.WriteLine("Utworzono konto oszczędnościowe:");
+            _printer.Print(savingsAccount);
+            Console.ReadKey();
+        }
+
+
+        // pozwala na wpłatę pieniędzy na konto
+        // pobieramy z konsoli numer konta
+        // pobieramy z konsoli kwotę 
+        // wykorzystyjemy metodę AddMoney z klasy AccountMAnager
+        private void AddMoney()
+        {
+            string accountNo;
+            decimal value;
+
+            Console.WriteLine("Wpłata pieniędzy");
+            Console.Write("Numer konta: ");
+            accountNo = Console.ReadLine();
+            Console.Write("Kwota: ");
+            value = decimal.Parse(Console.ReadLine());
+            _accountsManager.AddMoney(accountNo, value);
+
+            Account account = _accountsManager.GetAccount(accountNo);
+            _printer.Print(account);
+
+            Console.ReadKey();
+        }
+
+        // pozwala na wpłatę pieniędzy na konto
+        // pobieramy z konsoli numer konta
+        // pobieramy z konsoli kwotę 
+        // wykorzystyjemy metodę TakeMoney z klasy AccountMAnager
+        private void TakeMoney()
+        {
+            string accountNo;
+            decimal value;
+
+            Console.WriteLine("Wypłata pieniędzy");
+            Console.Write("Numer konta: ");
+            accountNo = Console.ReadLine();
+            Console.Write("Kwota: ");
+            value = decimal.Parse(Console.ReadLine());
+            _accountsManager.TakeMoney(accountNo, value);
+
+            Account account = _accountsManager.GetAccount(accountNo);
+            _printer.Print(account);
+
+            Console.ReadKey();
+        }
+
+        private void CloseMonth()
+        {
+            Console.Clear();
+            _accountsManager.CloseMonth();
+            Console.WriteLine("Miesiąc zamknięty");
+            Console.ReadKey();
+        }
 
     }
 }
