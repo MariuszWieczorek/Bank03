@@ -152,7 +152,7 @@ namespace Bank
         // wymusza pobranie danych kontrahenta z konsoli
         // zwrca obiekt Customer
         private CustomerData ReadCustomerData()
-        {
+        {   
             string firstName;
             string lastName;
             string pesel;

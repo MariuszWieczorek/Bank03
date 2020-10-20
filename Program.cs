@@ -20,8 +20,6 @@ namespace Bank
             BankManager BankX = new BankManager();
             BankX.Run();
 
-
-            Console.ReadKey();
         }
     }
 }
